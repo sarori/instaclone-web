@@ -2,73 +2,13 @@ import { darkModeVar } from "../apollo"
 import styled from "styled-components"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faFacebookSquare, faInstagram } from "@fortawesome/free-brands-svg-icons"
-import { Link } from "react-router-dom"
-
-const Wrapper = styled.div`
-	max-width: 350px;
-	width: 100%;
-`
-
-const Container = styled.div`
-	display: flex;
-	height: 100vh;
-	justify-content: center;
-	align-items: center;
-	flex-direction: column;
-`
-
-const WhiteBox = styled.div`
-	background-color: white;
-	border: 1px solid ${(props) => props.theme.borderColor};
-	width: 100%;
-`
-
-const TopBox = styled(WhiteBox)`
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	flex-direction: column;
-	padding: 35px 40px 25px 40px;
-	margin-bottom: 10px;
-	form {
-		margin-top: 35px;
-		width: 100%;
-		display: flex;
-		justify-items: center;
-		flex-direction: column;
-		align-items: center;
-	}
-`
-
-const BottomBox = styled(WhiteBox)`
-	padding: 10px 0px;
-	text-align: center;
-	a {
-		font-weight: 600;
-		margin-left: 5px;
-		color: ${(props) => props.theme.accent};
-	}
-`
-
-const Seperator = styled.div`
-	margin: 20px 0px 30px 0px;
-	text-transform: uppercase;
-	display: flex;
-	justify-content: center;
-	width: 100%;
-	align-items: center;
-	div {
-		width: 100%;
-		height: 1px;
-		background-color: ${(props) => props.theme.borderColor};
-	}
-	span {
-		margin: 0px 10px;
-		font-weight: 600;
-		font-size: 12px;
-		color: #8e8e8e;
-	}
-`
+import routes from "../routes"
+import Button from "../components/auth/Button"
+import AuthLayout from "../components/auth/AuthLayout"
+import Seperator from "../components/auth/Seperator"
+import Input from "../components/auth/Input"
+import FormBox from "../components/auth/FormBox"
+import BottomBox from "../components/auth/BottomBox"
 
 const FacebookLogin = styled.div`
 	color: #385285;
@@ -78,58 +18,26 @@ const FacebookLogin = styled.div`
 	}
 `
 
-const Button = styled.input`
-	border: none;
-	border-radius: 3px;
-	margin-top: 12px;
-	background-color: ${(props) => props.theme.accent};
-	color: white;
-	text-align: center;
-	padding: 8px 0px;
-	font-weight: 600;
-	width: 100%;
-`
-
-const Input = styled.input`
-	width: 100%;
-	border-radius: 3px;
-	padding: 7px;
-	background-color: #fafafa;
-	border: 0.5px solid ${(props) => props.theme.borderColor};
-	margin-top: 5px;
-	box-sizing: border-box;
-	&::placeholder {
-		font-size: 12px;
-	}
-`
-
 function Login() {
 	return (
-		<Container>
-			<Wrapper>
-				<TopBox>
-					<div>
-						<FontAwesomeIcon icon={faInstagram} size="3x" />
-					</div>
-					<form>
-						<Input type="text" placeholder="Username" />
-						<Input type="text" placeholder="Password" />
-						<Button type="submit" value="Log in" />
-					</form>
-					<Seperator>
-						<div> </div> <span> OR </span> <div> </div>
-					</Seperator>
-					<FacebookLogin>
-						<FontAwesomeIcon icon={faFacebookSquare} />
-						<span> Log in with Facebook </span>
-					</FacebookLogin>
-				</TopBox>
-				<BottomBox>
-					<span> Don 't have an account?</span>
-					<Link to="/sign-up">Sign Up </Link>
-				</BottomBox>
-			</Wrapper>
-		</Container>
+		<AuthLayout>
+			<FormBox>
+				<div>
+					<FontAwesomeIcon icon={faInstagram} size="3x" />
+				</div>
+				<form>
+					<Input type="text" placeholder="Username" />
+					<Input type="text" placeholder="Password" />
+					<Button type="submit" value="Log in" />
+				</form>
+				<Seperator />
+				<FacebookLogin>
+					<FontAwesomeIcon icon={faFacebookSquare} />
+					<span> Log in with Facebook </span>
+				</FacebookLogin>
+			</FormBox>
+			<BottomBox cta="Don't have an account?" linkText="Sign up" link={routes.signUp} />
+		</AuthLayout>
 	)
 }
 export default Login
