@@ -12,29 +12,27 @@ import { darkTheme, GlobalStyles, lightTheme } from "./styles"
 
 function App() {
 	const isLoggedIn = useReactiveVar(isLoggedInVar)
+	const darkMode = useReactiveVar(darkModeVar)
 	return (
 		<ApolloProvider client={client}>
 			<HelmetProvider>
-				<ThemeProvider theme={darkModeVar ? darkTheme : lightTheme}>
+				<ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
 					<GlobalStyles />
-					<div>
-						<Router>
-							<Switch>
-								<Route path={routes.home} exact>
-									{isLoggedIn ? <Home /> : <Login />}
+					<Router>
+						<Switch>
+							<Route path={routes.home} exact>
+								{isLoggedIn ? <Home /> : <Login />}
+							</Route>
+							{!isLoggedIn ? (
+								<Route path={routes.signUp}>
+									<SignUp />
 								</Route>
-								{!isLoggedIn ? (
-									<Route path={routes.signUp}>
-										<SignUp />
-									</Route>
-								) : null}
-
-								<Route>
-									<NotFound />
-								</Route>
-							</Switch>
-						</Router>
-					</div>
+							) : null}
+							<Route>
+								<NotFound />
+							</Route>
+						</Switch>
+					</Router>
 				</ThemeProvider>
 			</HelmetProvider>
 		</ApolloProvider>
