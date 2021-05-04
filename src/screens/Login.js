@@ -8,7 +8,7 @@ import Seperator from "../components/auth/Seperator"
 import Input from "../components/auth/Input"
 import FormBox from "../components/auth/FormBox"
 import BottomBox from "../components/auth/BottomBox"
-import { useState } from "react"
+import PageTitle from "../components/PageTitle"
 
 const FacebookLogin = styled.div`
 	color: #385285;
@@ -19,38 +19,17 @@ const FacebookLogin = styled.div`
 `
 
 function Login() {
-	const [username, setUsername] = useState("")
-	const [usernameError, setUsernameError] = useState("")
-	const onUsernameChange = (event) => {
-		setUsernameError("")
-		setUsername(event.target.value)
-	}
-	const handleSubmit = (event) => {
-		event.preventDefault()
-		if (username.length < 10) {
-			setUsernameError("Too Short")
-		}
-	}
 	return (
 		<AuthLayout>
+			<PageTitle title="Log In" />
 			<FormBox>
 				<div>
 					<FontAwesomeIcon icon={faInstagram} size="3x" />
 				</div>
-				<form onSubmit={handleSubmit}>
-					{usernameError}
-					<Input
-						onChange={onUsernameChange}
-						value={username}
-						type="text"
-						placeholder="Username"
-					/>
+				<form>
+					<Input type="text" placeholder="Username" />
 					<Input type="text" placeholder="Password" />
-					<Button
-						type="submit"
-						value="Log in"
-						disable={username === "" && username.length < 10}
-					/>
+					<Button type="submit" value="Log in" />
 				</form>
 				<Seperator />
 				<FacebookLogin>
