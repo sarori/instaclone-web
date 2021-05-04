@@ -36,7 +36,7 @@ function SignUp() {
 					<Input type="text" placeholder="Email" />
 					<Input type="text" placeholder="Username" />
 					<Input type="text" placeholder="Password" />
-					<Button type="submit" value="Log In" />
+					<Button type="submit" value="Sign Up" />
 				</form>
 			</FormBox>
 			<BottomBox cta="Have an account?" linkText="Log in" link={routes.home} />
