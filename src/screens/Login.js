@@ -12,6 +12,7 @@ import PageTitle from "../components/PageTitle"
 import { useForm } from "react-hook-form"
 import FormError from "../components/auth/FormError"
 import { useMutation, gql } from "@apollo/client"
+import { logUserIn } from "../apollo"
 
 const FacebookLogin = styled.div`
 	color: #385285;
@@ -32,7 +33,15 @@ const LOGIN_MUTATION = gql`
 `
 
 function Login() {
-	const { register, handleSubmit, formState, getValues, setError } = useForm({
+	const {
+		register,
+		handleSubmit,
+		formState,
+		getValues,
+		setError,
+		clearErrors,
+		trigger,
+	} = useForm({
 		mode: "onChange",
 	})
 	const onCompleted = (data) => {
@@ -40,12 +49,13 @@ function Login() {
 			login: { ok, error, token },
 		} = data
 		if (!ok) {
-			setError("result", {
+			return setError("result", {
 				message: error,
 			})
 		}
-		console.log(data, "data is")
-		console.log("error is", error)
+		if (token) {
+			logUserIn(token)
+		}
 	}
 	const [login, { loading, error }] = useMutation(LOGIN_MUTATION, {
 		onCompleted,
@@ -59,6 +69,13 @@ function Login() {
 		login({
 			variables: { username, password },
 		})
+	}
+	const clearLoginError = ({ data }) => {
+		//need to be fix
+		if (!formState.isValid) {
+			trigger()
+			clearErrors("result")
+		}
 	}
 	return (
 		<AuthLayout>
@@ -76,6 +93,7 @@ function Login() {
 								message: "Username should be longer than 5 characters.",
 							},
 						})}
+						onChange={clearLoginError}
 						type="text"
 						placeholder="Username"
 						hasError={Boolean(formState.errors?.username?.message)}
@@ -83,7 +101,7 @@ function Login() {
 					<FormError message={formState.errors?.username?.message} />
 					<Input
 						{...register("password", { required: "Password is required" })}
-						name="password"
+						onChange={clearLoginError}
 						type="password"
 						placeholder="Password"
 						hasError={Boolean(formState.errors?.password?.message)}
