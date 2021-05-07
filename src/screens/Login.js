@@ -72,10 +72,10 @@ function Login() {
 	}
 	const clearLoginError = ({ data }) => {
 		//need to be fix
-		if (!formState.isValid) {
-			trigger()
-			clearErrors("result")
-		}
+		// if (!formState.isValid) {
+		trigger()
+		clearErrors("result")
+		// }
 	}
 	return (
 		<AuthLayout>
