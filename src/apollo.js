@@ -1,5 +1,19 @@
-import { ApolloClient, InMemoryCache, makeVar } from "@apollo/client"
+import {
+	ApolloClient,
+	InMemoryCache,
+	makeVar,
+	gql,
+	ApolloLink,
+	HttpLink,
+	concat,
+} from "@apollo/client"
+import { onError } from "@apollo/client/link/error"
 
+const typeDefs = gql`
+	extend type Query {
+		isLoggedIn: Boolean!
+	}
+`
 const TOKEN = "TOKEN"
 const DARK_MODE = "DARK_MODE"
 
@@ -26,7 +40,43 @@ export const logUserOut = () => {
 	window.location.reload()
 }
 
-export const client = new ApolloClient({
+const cache = new InMemoryCache({
+	typePolicies: {
+		Query: {
+			fields: {
+				isLoggedIn: {
+					read() {
+						return isLoggedInVar()
+					},
+				},
+			},
+		},
+	},
+})
+
+const authMiddle = new ApolloLink((operation, forward) => {
+	operation.setContext({ headers: { TOKEN: localStorage.getItem("TOKEN") || "" } })
+	return forward(operation)
+})
+
+const errLink = onError(({ graphqlErrors, networkError }) => {
+	if (graphqlErrors) {
+		graphqlErrors.map(({ message }) => console.log("network graphql Error : ", message))
+	}
+})
+
+const httpLink = new HttpLink({
 	uri: "http://localhost:4000/graphql",
-	cache: new InMemoryCache(),
+})
+
+export const client = new ApolloClient({
+	// uri: "http://localhost:4000/graphql",
+	cache,
+	link: ApolloLink.from([errLink, concat(authMiddle, httpLink)]),
+	headers: {
+		authorization: localStorage.getItem("X-JWT") || "",
+	},
+	typeDefs,
+
+	// cache: new InMemoryCache(),
 })

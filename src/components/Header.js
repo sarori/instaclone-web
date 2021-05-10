@@ -44,6 +44,7 @@ const Button = styled.span`
 function Header() {
 	const isLoggedIn = useReactiveVar(isLoggedInVar)
 	const loggedInUser = useUser()
+	console.log(loggedInUser)
 	return (
 		<SHeader>
 			<Wrapper>

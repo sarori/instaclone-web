@@ -39,22 +39,14 @@ const LOGIN_MUTATION = gql`
 
 function Login() {
 	const location = useLocation()
-	console.log(location)
-	const {
-		register,
-		handleSubmit,
-		formState,
-		getValues,
-		setError,
-		clearErrors,
-		trigger,
-	} = useForm({
-		mode: "onChange",
-		defaultValues: {
-			username: location?.state?.username || "",
-			password: location?.state?.password || "",
-		},
-	})
+	const { register, handleSubmit, formState, getValues, setError, clearErrors, trigger } =
+		useForm({
+			mode: "onChange",
+			defaultValues: {
+				username: location?.state?.username || "",
+				password: location?.state?.password || "",
+			},
+		})
 	const onCompleted = (data) => {
 		const {
 			login: { ok, error, token },
@@ -76,7 +68,7 @@ function Login() {
 			return
 		}
 		const { username, password } = getValues()
-		console.log(username, password)
+
 		login({
 			variables: { username, password },
 		})
