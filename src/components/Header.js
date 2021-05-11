@@ -43,8 +43,8 @@ const Button = styled.span`
 
 function Header() {
 	const isLoggedIn = useReactiveVar(isLoggedInVar)
-	const loggedInUser = useUser()
-	console.log(loggedInUser)
+	const userinfo = useUser()
+	console.log(userinfo)
 	return (
 		<SHeader>
 			<Wrapper>
@@ -60,9 +60,11 @@ function Header() {
 							<Icon>
 								<FontAwesomeIcon icon={faCompass} size="lg" />
 							</Icon>
-							<Icon>
-								<FontAwesomeIcon icon={faUser} size="lg" />
-							</Icon>
+							{
+								<Icon>
+									<FontAwesomeIcon icon={faUser} size="lg" />
+								</Icon>
+							}
 						</>
 					) : (
 						<Link href={routes.home}>

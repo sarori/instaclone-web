@@ -55,7 +55,7 @@ const cache = new InMemoryCache({
 })
 
 const authMiddle = new ApolloLink((operation, forward) => {
-	operation.setContext({ headers: { TOKEN: localStorage.getItem("TOKEN") || "" } })
+	operation.setContext({ headers: { token: localStorage.getItem("TOKEN") || "" } })
 	return forward(operation)
 })
 
@@ -70,13 +70,10 @@ const httpLink = new HttpLink({
 })
 
 export const client = new ApolloClient({
-	// uri: "http://localhost:4000/graphql",
 	cache,
 	link: ApolloLink.from([errLink, concat(authMiddle, httpLink)]),
 	headers: {
 		authorization: localStorage.getItem("X-JWT") || "",
 	},
 	typeDefs,
-
-	// cache: new InMemoryCache(),
 })
