@@ -3,6 +3,8 @@ import { gql, useQuery } from "@apollo/client"
 import styled from "styled-components"
 import Avatar from "../components/Avatar"
 import { FatText } from "../components/shared"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faBookmark, faComment, faHeart, faPaperPlane } from "@fortawesome/free-regular-svg-icons"
 
 const FEED_QUERY = gql`
 	query seeFeed {
@@ -29,13 +31,41 @@ const PhotoContainer = styled.div`
 `
 
 const PhotoHeader = styled.div`
-	padding: 5px 10px;
+	padding: 15px 15px;
 	display: flex;
 	align-items: center;
+	max-width: 500px;
 `
 
 const Username = styled(FatText)`
-	margin-left: 5px;
+	margin-left: 15px;
+`
+
+const PhotoFile = styled.img`
+	min-width: 100%;
+`
+
+const PhotoData = styled.div`
+	padding: 15px;
+`
+
+const PhotoActions = styled.div`
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	div {
+		display: flex;
+		align-items: center;
+	}
+`
+
+const PhotoAction = styled.div`
+	margin-right: 10px;
+`
+
+const Likes = styled(FatText)`
+	margin-top: 10px;
+	display: block;
 `
 
 function Home() {
@@ -45,9 +75,29 @@ function Home() {
 			{data?.seeFeed?.map((photo) => (
 				<PhotoContainer key={photo.id}>
 					<PhotoHeader>
-						<Avatar url={photo.user.avatar} />
+						<Avatar lg url={photo.user.avatar} />
 						<Username>{photo.user.username}</Username>
 					</PhotoHeader>
+					<PhotoFile src={photo.file} />
+					<PhotoData>
+						<PhotoActions>
+							<div>
+								<PhotoAction>
+									<FontAwesomeIcon size="2x" icon={faHeart} />
+								</PhotoAction>
+								<PhotoAction>
+									<FontAwesomeIcon size="2x" icon={faComment} />
+								</PhotoAction>
+								<PhotoAction>
+									<FontAwesomeIcon size="2x" icon={faPaperPlane} />
+								</PhotoAction>
+							</div>
+							<div>
+								<FontAwesomeIcon size="2x" icon={faBookmark} />
+							</div>
+						</PhotoActions>
+						<Likes>{photo.likes === 1 ? "1 like" : `${photo.likes} likes`}</Likes>
+					</PhotoData>
 				</PhotoContainer>
 			))}
 		</div>
