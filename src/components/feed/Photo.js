@@ -6,7 +6,6 @@ import { faBookmark, faComment, faHeart, faPaperPlane } from "@fortawesome/free-
 import { faHeart as SolidHeart } from "@fortawesome/free-solid-svg-icons"
 import Avatar from "../Avatar"
 import { gql, useMutation } from "@apollo/client"
-import { FEED_QUERY } from "../../screens/Home"
 
 const TOGGLE_LIKE_MUTATION = gql`
 	mutation toggleLike($id: Int!) {
@@ -66,11 +65,31 @@ const Likes = styled(FatText)`
 `
 
 function Photo({ id, user, file, isLiked, likes }) {
-	const [toggleLikeMutation, { loading }] = useMutation(TOGGLE_LIKE_MUTATION, {
+	const updateToggleLike = (cache, result) => {
+		const {
+			data: {
+				toggleLike: { ok },
+			},
+		} = result
+		if (ok) {
+			cache.writeFragment({
+				id: `Photo:${id}`,
+				fragment: gql`
+					fragment Name on Photo {
+						isLiked
+					}
+				`,
+				data: {
+					isLiked: !isLiked,
+				},
+			})
+		}
+	}
+	const [toggleLikeMutation] = useMutation(TOGGLE_LIKE_MUTATION, {
 		variables: {
 			id,
 		},
-		refetchQueries: [{ query: FEED_QUERY }],
+		update: updateToggleLike,
 	})
 	return (
 		<PhotoContainer key={id}>
