@@ -15,29 +15,28 @@ const ME_QUERY = gql`
 function useUser() {
 	const hasToken = useReactiveVar(isLoggedInVar)
 
-	const [temp, setTemp] = useState()
-	const { loading, data } = useQuery(ME_QUERY, {
+	const [data, setData] = useState()
+	const { loading } = useQuery(ME_QUERY, {
 		skip: !hasToken,
 		onCompleted: (result) => {
 			const { me } = result
 			if (me) {
-				setTemp(me)
-				// console.log(temp)
+				setData(me)
 			}
 		},
 	})
-	// console.log(temp)
-	// useEffect(() => {
-	// 	if (data?.me === null) {
-	// 		logUserOut()
-	// 	}
-	// }, [data])
+	useEffect(() => {
+		const timer = setTimeout(() => {
+			if (loading === false && data === undefined && hasToken === true) {
+				logUserOut()
+			}
+		}, 3000)
+		return () => clearTimeout(timer)
+	}, [loading, data, hasToken])
 
-	// useEffect(() => {
-	// 	if (temp === null) {
-	// 		logUserOut()
-	// 	}
-	// }, [temp])
-	return temp
+	if (loading) {
+		return false
+	}
+	return data
 }
 export default useUser

@@ -44,7 +44,12 @@ const Button = styled.span`
 function Header() {
 	const isLoggedIn = useReactiveVar(isLoggedInVar)
 	const userinfo = useUser()
-	console.log(userinfo)
+
+	if (userinfo === false) {
+		return "loading"
+	}
+	console.log(userinfo && userinfo.username)
+
 	return (
 		<SHeader>
 			<Wrapper>
@@ -62,7 +67,10 @@ function Header() {
 							</Icon>
 							{
 								<Icon>
-									<FontAwesomeIcon icon={faUser} size="lg" />
+									<FontAwesomeIcon
+										icon={userinfo?.avatar ? userinfo.avatar : faUser}
+										size="lg"
+									/>
 								</Icon>
 							}
 						</>
