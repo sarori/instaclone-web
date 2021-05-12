@@ -29,7 +29,7 @@ const FEED_QUERY = gql`
 const PhotoContainer = styled.div`
 	background-color: white;
 	border: 1px solid ${(props) => props.theme.borderColor};
-	margin-botoom: 20px;
+	margin-bottom: 20px;
 `
 
 const PhotoHeader = styled.div`
