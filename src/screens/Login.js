@@ -60,7 +60,7 @@ function Login() {
 			logUserIn(token)
 		}
 	}
-	const [login, { loading, error }] = useMutation(LOGIN_MUTATION, {
+	const [login, { loading }] = useMutation(LOGIN_MUTATION, {
 		onCompleted,
 	})
 	const onSubmitValid = async (data) => {
