@@ -6,6 +6,7 @@ import { faBookmark, faComment, faHeart, faPaperPlane } from "@fortawesome/free-
 import { faHeart as SolidHeart } from "@fortawesome/free-solid-svg-icons"
 import Avatar from "../Avatar"
 import { gql, useMutation } from "@apollo/client"
+import Comments from "./Comments"
 
 const TOGGLE_LIKE_MUTATION = gql`
 	mutation toggleLike($id: Int!) {
@@ -62,23 +63,6 @@ const PhotoAction = styled.div`
 const Likes = styled(FatText)`
 	margin-top: 10px;
 	display: block;
-`
-
-const Comments = styled.div`
-	margin-top: 20px;
-`
-
-const Comment = styled.div``
-
-const CommentCaption = styled.span`
-	margin-left: 10px;
-`
-const CommentCount = styled.span`
-	opacity: 0.7;
-	font-size: 12px;
-	margin: 10px 0px;
-	display: block;
-	font-weight: 600;
 `
 
 function Photo({ id, user, file, isLiked, likes, caption, commentNumber, comments }) {
@@ -138,15 +122,12 @@ function Photo({ id, user, file, isLiked, likes, caption, commentNumber, comment
 					</div>
 				</PhotoActions>
 				<Likes>{likes === 1 ? "1 like" : `${likes} likes`}</Likes>
-				<Comments>
-					<Comment>
-						<FatText>{user.username}</FatText>
-						<CommentCaption>{caption}</CommentCaption>
-					</Comment>
-					<CommentCount>
-						{commentNumber === 1 ? "1 comment" : `${commentNumber} comments`}
-					</CommentCount>
-				</Comments>
+				<Comments
+					author={user.username}
+					caption={caption}
+					comments={comments}
+					commentNumber={commentNumber}
+				/>
 			</PhotoData>
 		</PhotoContainer>
 	)
