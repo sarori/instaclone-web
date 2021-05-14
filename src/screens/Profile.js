@@ -5,6 +5,7 @@ import { PHOTO_FRAGMENT } from "../fragments"
 const SEE_PROFILE_QUERY = gql`
 	query seeProfile($username: String!) {
 		seeProfile(username: $username) {
+			id
 			firstName
 			lastName
 			username

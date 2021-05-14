@@ -42,6 +42,9 @@ export const logUserOut = () => {
 
 const cache = new InMemoryCache({
 	typePolicies: {
+		User: {
+			keyFields: (obj) => `Users:${obj.username}`,
+		},
 		Query: {
 			fields: {
 				isLoggedIn: {
