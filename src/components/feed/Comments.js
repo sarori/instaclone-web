@@ -27,6 +27,19 @@ const CommentCount = styled.span`
 	font-weight: 600;
 `
 
+const PostCommentContainer = styled.div`
+	margin-top: 10px;
+	padding-top: 15px;
+	padding-bottom: 10px;
+	border-top: 1px solid ${(props) => props.theme.borderColor};
+`
+const PostCommentInput = styled.input`
+	width: 100%;
+	&::placeholder {
+		font-size: 12px;
+	}
+`
+
 function Comments({ photoId, author, caption, commentNumber, comments }) {
 	const userData = useUser()
 	const { register, handleSubmit, setValue, getValues } = useForm()
@@ -104,13 +117,16 @@ function Comments({ photoId, author, caption, commentNumber, comments }) {
 			{comments?.map((comment) => (
 				<Comment
 					key={comment.id}
+					id={comment.id}
+					photoId={photoId}
 					author={comment.user.username}
 					payload={comment.payload}
+					isMine={comment.isMine}
 				/>
 			))}
-			<div>
+			<PostCommentContainer>
 				<form onSubmit={handleSubmit(onValid)}>
-					<input
+					<PostCommentInput
 						{...register("payload", {
 							required: true,
 						})}
@@ -118,7 +134,7 @@ function Comments({ photoId, author, caption, commentNumber, comments }) {
 						placeholder="Write a comment..."
 					/>
 				</form>
-			</div>
+			</PostCommentContainer>
 		</CommentsContainer>
 	)
 }
