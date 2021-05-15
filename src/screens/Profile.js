@@ -6,6 +6,23 @@ import { FatText } from "../components/shared"
 import styled from "styled-components"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faComment, faHeart } from "@fortawesome/free-regular-svg-icons"
+import Button from "../components/auth/Button"
+
+const FOLLOW_USER_MUTATION = gql`
+	mutation followUser($username: String!) {
+		followUser(username: $username) {
+			ok
+		}
+	}
+`
+
+const UNFOLLOW_USER_MUTATION = gql`
+	mutation unfollowUser($username: String!) {
+		unfollowUser(username: $username) {
+			ok
+		}
+	}
+`
 
 const Header = styled.div`
 	display: flex;
@@ -29,6 +46,7 @@ const Username = styled.h3`
 const Row = styled.div`
 	margin-bottom: 15px;
 	font-size: 16px;
+	display: flex;
 `
 
 const List = styled.ul`
@@ -86,6 +104,14 @@ const Icon = styled.span`
 	}
 `
 
+const ProfileBtn = styled(Button).attrs({
+	as: "span",
+})`
+	margin-left: 10px;
+	padding: 8px 4px;
+	margin-top: 0px;
+`
+
 const SEE_PROFILE_QUERY = gql`
 	query seeProfile($username: String!) {
 		seeProfile(username: $username) {
@@ -109,21 +135,31 @@ const SEE_PROFILE_QUERY = gql`
 
 function Profile() {
 	const { username } = useParams()
-	const { data } = useQuery(SEE_PROFILE_QUERY, {
+	const { data, loading } = useQuery(SEE_PROFILE_QUERY, {
 		variables: {
 			username,
 		},
 	})
-
-	console.log(data?.seeProfile)
+	const getButton = (seeProfile) => {
+		const { isMe, isFollowing } = seeProfile
+		if (isMe) {
+			return <ProfileBtn>Edit Profile</ProfileBtn>
+		}
+		if (isFollowing) {
+			return <ProfileBtn>Unfollow</ProfileBtn>
+		} else {
+			return <ProfileBtn>Follow</ProfileBtn>
+		}
+	}
 	return (
 		<div>
 			<Header>
-				<PageTitle title={username} />
+				<PageTitle title={loading ? "loading" : `${data?.seeProfile?.username}`} />
 				<Avatar src={data?.seeProfile?.avatar} />
 				<Column>
 					<Row>
 						<Username>{data?.seeProfile?.username}</Username>
+						{data?.seeProfile ? getButton(data?.seeProfile) : null}
 					</Row>
 					<Row>
 						<List>
