@@ -58,7 +58,9 @@ function Header() {
 		<SHeader>
 			<Wrapper>
 				<Column>
-					<FontAwesomeIcon icon={faInstagram} size="2x" />
+					<Link to={routes.home}>
+						<FontAwesomeIcon icon={faInstagram} size="2x" />
+					</Link>
 				</Column>
 				<Column>
 					{isLoggedIn ? (

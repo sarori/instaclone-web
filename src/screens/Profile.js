@@ -1,5 +1,5 @@
 import { useParams } from "react-router"
-import { gql, useMutation, useQuery } from "@apollo/client"
+import { gql, useApolloClient, useMutation, useQuery } from "@apollo/client"
 import { PHOTO_FRAGMENT } from "../fragments"
 import PageTitle from "../components/PageTitle"
 import { FatText } from "../components/shared"
@@ -7,7 +7,6 @@ import styled from "styled-components"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faComment, faHeart } from "@fortawesome/free-regular-svg-icons"
 import Button from "../components/auth/Button"
-import useUser from "../hooks/useUser"
 
 const FOLLOW_USER_MUTATION = gql`
 	mutation followUser($username: String!) {
@@ -72,7 +71,7 @@ const Grid = styled.div`
 	grid-template-columns: repeat(3, 1fr);
 	gap: 30px;
 	margin-top: 50px;
-	margin-bottom: 100px;
+	/* margin-bottom: 100px; */
 `
 const Photo = styled.div`
 	background-image: url(${(props) => props.bg});
@@ -137,22 +136,67 @@ const SEE_PROFILE_QUERY = gql`
 
 function Profile() {
 	const { username } = useParams()
+	const client = useApolloClient()
 	const { data, loading } = useQuery(SEE_PROFILE_QUERY, {
 		variables: {
 			username,
 		},
 	})
+	const unfollowUserUpdate = (cache, result) => {
+		const {
+			data: {
+				unfollowUser: { ok },
+			},
+		} = result
+		if (!ok) {
+			return
+		}
+		cache.modify({
+			id: `Users:${username}`,
+			fields: {
+				isFollowing(prev) {
+					return false
+				},
+				totalFollowers(prev) {
+					return prev - 1
+				},
+			},
+		})
+	}
+
 	const [unfollowUser] = useMutation(UNFOLLOW_USER_MUTATION, {
 		variables: {
 			username,
 		},
-		refetchQueries: [{ query: SEE_PROFILE_QUERY, variables: { username } }],
+		update: unfollowUserUpdate,
 	})
+
+	const followUserCompleted = (data) => {
+		const {
+			followUser: { ok },
+		} = data
+		if (!ok) {
+			return
+		}
+		const { cache } = client
+		cache.modify({
+			id: `Users:${username}`,
+			fields: {
+				isFollowing(prev) {
+					return true
+				},
+				totalFollowers(prev) {
+					return prev + 1
+				},
+			},
+		})
+	}
+
 	const [followUser] = useMutation(FOLLOW_USER_MUTATION, {
 		variables: {
 			username,
 		},
-		refetchQueries: [{ query: SEE_PROFILE_QUERY, variables: { username } }],
+		onCompleted: followUserCompleted,
 	})
 	const getButton = (seeProfile) => {
 		const { isMe, isFollowing } = seeProfile
@@ -164,7 +208,10 @@ function Profile() {
 		} else {
 			return <ProfileBtn onClick={followUser}>Follow</ProfileBtn>
 		}
+		// return <ProfileBtn onClick={followUser}>Follow</ProfileBtn>
 	}
+
+	// console.log(data)
 	return (
 		<div>
 			<Header>
