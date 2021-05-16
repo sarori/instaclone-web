@@ -7,6 +7,7 @@ import styled from "styled-components"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faComment, faHeart } from "@fortawesome/free-regular-svg-icons"
 import Button from "../components/auth/Button"
+import useUser from "../hooks/useUser"
 
 const FOLLOW_USER_MUTATION = gql`
 	mutation followUser($username: String!) {
@@ -136,6 +137,7 @@ const SEE_PROFILE_QUERY = gql`
 
 function Profile() {
 	const { username } = useParams()
+	const userInfo = useUser()
 	const client = useApolloClient()
 	const { data, loading } = useQuery(SEE_PROFILE_QUERY, {
 		variables: {
@@ -162,6 +164,20 @@ function Profile() {
 				},
 			},
 		})
+
+		if (!userInfo) {
+			return
+		}
+		if (userInfo?.username) {
+			cache.modify({
+				id: `Users:${userInfo.username}`,
+				fields: {
+					totalFollowing(prev) {
+						return prev - 1
+					},
+				},
+			})
+		}
 	}
 
 	const [unfollowUser] = useMutation(UNFOLLOW_USER_MUTATION, {
@@ -190,6 +206,19 @@ function Profile() {
 				},
 			},
 		})
+		if (!userInfo) {
+			return
+		}
+		if (userInfo?.username) {
+			cache.modify({
+				id: `Users:${userInfo.username}`,
+				fields: {
+					totalFollowing(prev) {
+						return prev + 1
+					},
+				},
+			})
+		}
 	}
 
 	const [followUser] = useMutation(FOLLOW_USER_MUTATION, {
