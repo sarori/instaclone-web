@@ -4,6 +4,7 @@ import styled from "styled-components"
 import Comment from "./Comment"
 import { useMutation, gql } from "@apollo/client"
 import useUser from "../../hooks/useUser"
+import Content from "./Content"
 
 const CREATE_COMMENT_MUTATION = gql`
 	mutation createComment($photoId: Int!, $payload: String!) {
@@ -110,7 +111,7 @@ function Comments({ photoId, author, caption, commentNumber, comments }) {
 
 	return (
 		<CommentsContainer>
-			<Comment author={author} payload={caption} />
+			<Content author={author} payload={caption} />
 			<CommentCount>
 				{commentNumber === 1 ? "1 comment" : `${commentNumber} comments`}
 			</CommentCount>

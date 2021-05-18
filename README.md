@@ -1,5 +1,9 @@
 # Instaclone Backend
 
+## Skill
+
+Apollo, React, React Hook Form, Styled Components, React Hooks
+
 ## Login and Signup
 
 -   [x] Create Account
