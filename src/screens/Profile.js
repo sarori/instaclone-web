@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faComment, faHeart } from "@fortawesome/free-regular-svg-icons"
 import Button from "../components/auth/Button"
 import useUser from "../hooks/useUser"
+import { logUserOut } from "../apollo"
 
 const FOLLOW_USER_MUTATION = gql`
 	mutation followUser($username: String!) {
@@ -230,17 +231,15 @@ function Profile() {
 	const getButton = (seeProfile) => {
 		const { isMe, isFollowing } = seeProfile
 		if (isMe) {
-			return <ProfileBtn>Edit Profile</ProfileBtn>
+			return <ProfileBtn onClick={logUserOut}>LogOut</ProfileBtn>
 		}
 		if (isFollowing) {
 			return <ProfileBtn onClick={unfollowUser}>Unfollow</ProfileBtn>
 		} else {
 			return <ProfileBtn onClick={followUser}>Follow</ProfileBtn>
 		}
-		// return <ProfileBtn onClick={followUser}>Follow</ProfileBtn>
 	}
 
-	// console.log(data)
 	return (
 		<div>
 			<Header>
