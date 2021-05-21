@@ -1,6 +1,6 @@
 # Instaclone Backend
 
-## Skill
+## Skills
 
 Apollo, React, React Hook Form, Styled Components, React Hooks
 
