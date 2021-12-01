@@ -208,7 +208,7 @@ function Comment({ id, photoId, isMine, author, payload }) {
 							)
 						)}
 					</CommentCaption>
-					{isMine ? (
+					{/* {isMine ? (
 						<Icons>
 							<Icon onClick={toggleEditing}>
 								<FontAwesomeIcon icon={faPencilAlt} size="lg" />
@@ -217,7 +217,7 @@ function Comment({ id, photoId, isMine, author, payload }) {
 								<FontAwesomeIcon icon={faTrash} size="lg" />
 							</Icon>
 						</Icons>
-					) : null}
+					) : null} */}
 				</>
 			)}
 		</CommentContainer>
@@ -227,7 +227,6 @@ function Comment({ id, photoId, isMine, author, payload }) {
 Comment.propTypes = {
 	id: PropTypes.number,
 	photoId: PropTypes.number,
-	isMine: PropTypes.bool,
 	author: PropTypes.string.isRequired,
 	payload: PropTypes.string.isRequired,
 }

@@ -57,7 +57,6 @@ function Comments({ photoId, author, caption, commentNumber, comments }) {
 				__typename: "Comment",
 				createdAt: Date.now() + "",
 				id,
-				isMine: true,
 				payload,
 				user: {
 					...userData.me,
@@ -69,7 +68,6 @@ function Comments({ photoId, author, caption, commentNumber, comments }) {
 					fragment Name on Comment {
 						id
 						createdAt
-						isMine
 						payload
 						user {
 							username
@@ -122,7 +120,6 @@ function Comments({ photoId, author, caption, commentNumber, comments }) {
 					photoId={photoId}
 					author={comment.user.username}
 					payload={comment.payload}
-					isMine={comment.isMine}
 				/>
 			))}
 			<PostCommentContainer>
@@ -153,7 +150,6 @@ Comments.propTypes = {
 				username: PropTypes.string.isRequired,
 			}),
 			payload: PropTypes.string.isRequired,
-			isMine: PropTypes.bool.isRequired,
 			createdAt: PropTypes.string.isRequired,
 		})
 	),

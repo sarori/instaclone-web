@@ -125,15 +125,12 @@ const SEE_PROFILE_QUERY = gql`
 			bio
 			avatar
 			photos {
-				...PhotoFragment
+				id
+				file
+				commentNumber
 			}
-			totalFollowing
-			totalFollowers
-			isMe
-			isFollowing
 		}
 	}
-	${PHOTO_FRAGMENT}
 `
 
 function Profile() {

@@ -4,7 +4,9 @@ export const PHOTO_FRAGMENT = gql`
 	fragment PhotoFragment on Photo {
 		id
 		file
-		likes
+		likes {
+			id
+		}
 		commentNumber
 		isLiked
 	}
@@ -18,7 +20,6 @@ export const COMMENT_FRAGMENT = gql`
 			avatar
 		}
 		payload
-		isMine
 		createdAt
 	}
 `

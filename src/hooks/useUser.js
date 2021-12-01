@@ -5,18 +5,19 @@ import { isLoggedInVar, logUserOut } from "../apollo"
 const ME_QUERY = gql`
 	query me {
 		me {
-			id
-			username
-			avatar
-			totalFollowing
-			totalFollowers
+			ok
+			error
+			user {
+				id
+				username
+				avatar
+			}
 		}
 	}
 `
 
 function useUser() {
 	const hasToken = useReactiveVar(isLoggedInVar)
-
 	const [data, setData] = useState()
 	const { loading } = useQuery(ME_QUERY, {
 		skip: !hasToken,
@@ -27,6 +28,7 @@ function useUser() {
 			}
 		},
 	})
+
 	useEffect(() => {
 		const timer = setTimeout(() => {
 			if (loading === false && data === undefined && hasToken === true) {

@@ -28,7 +28,7 @@ const Subtitle = styled(FatLink)`
 const CREATE_ACCOUNT_MUTATION = gql`
 	mutation createAccount(
 		$firstName: String!
-		$lastName: String
+		$lastName: String!
 		$username: String!
 		$email: String!
 		$password: String!
@@ -54,6 +54,8 @@ function SignUp() {
 			createAccount: { ok, error },
 		} = data
 		if (!ok) {
+			console.log(error)
+
 			return setError("result", {
 				message: error,
 			})
@@ -74,6 +76,7 @@ function SignUp() {
 		if (loading) {
 			return
 		}
+
 		createAccount({
 			variables: {
 				...data,
