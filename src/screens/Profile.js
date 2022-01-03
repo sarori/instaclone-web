@@ -1,5 +1,5 @@
 import { useParams } from "react-router"
-import { gql, useApolloClient, useMutation, useQuery } from "@apollo/client"
+import { gql, useApolloClient, useMutation, useQuery, useLazyQuery } from "@apollo/client"
 import { PHOTO_FRAGMENT } from "../fragments"
 import PageTitle from "../components/PageTitle"
 import { FatText } from "../components/shared"
@@ -9,6 +9,7 @@ import { faComment, faHeart } from "@fortawesome/free-regular-svg-icons"
 import Button from "../components/auth/Button"
 import useUser from "../hooks/useUser"
 import { logUserOut } from "../apollo"
+import { useEffect } from "react/cjs/react.development"
 
 const FOLLOW_USER_MUTATION = gql`
 	mutation followUser($username: String!) {
@@ -124,11 +125,11 @@ const SEE_PROFILE_QUERY = gql`
 			username
 			bio
 			avatar
-			photos {
-				id
-				file
-				commentNumber
-			}
+			# photos {
+			# 	id
+			# 	file
+			# 	commentNumber
+			# }
 		}
 	}
 `
@@ -137,11 +138,17 @@ function Profile() {
 	const { username } = useParams()
 	const userInfo = useUser()
 	const client = useApolloClient()
-	const { data, loading } = useQuery(SEE_PROFILE_QUERY, {
-		variables: {
-			username,
-		},
-	})
+
+	const [getProfile, { data, loading }] = useLazyQuery(SEE_PROFILE_QUERY)
+
+	useEffect(() => {
+		getProfile({
+			variables: {
+				username,
+			},
+		})
+	}, [username, getProfile])
+
 	const unfollowUserUpdate = (cache, result) => {
 		const {
 			data: {

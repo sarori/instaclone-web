@@ -50,6 +50,7 @@ const IconsContainer = styled.div`
 function Header() {
 	const isLoggedIn = useReactiveVar(isLoggedInVar)
 	const userinfo = useUser()
+	console.log(userinfo)
 	if (userinfo === false) {
 		return "loading"
 	}
@@ -74,8 +75,8 @@ function Header() {
 								</Icon>
 								{
 									<Icon>
-										<Link to={`/users/${userinfo?.username}`}>
-											<Avatar url={userinfo?.avatar} />
+										<Link to={`/users/${userinfo?.user?.username}`}>
+											<Avatar url={userinfo?.user?.username} />
 										</Link>
 									</Icon>
 								}

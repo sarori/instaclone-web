@@ -3,8 +3,8 @@ import { useEffect, useState } from "react"
 import { isLoggedInVar, logUserOut } from "../apollo"
 
 const ME_QUERY = gql`
-	query me {
-		me {
+	query me($token: String!) {
+		me(token: $token) {
 			ok
 			error
 			user {
@@ -17,11 +17,16 @@ const ME_QUERY = gql`
 `
 
 function useUser() {
-	const hasToken = useReactiveVar(isLoggedInVar)
+	// const hasToken = useReactiveVar(isLoggedInVar)
+	const hasToken = localStorage.getItem("TOKEN")
 	const [data, setData] = useState()
 	const { loading } = useQuery(ME_QUERY, {
 		skip: !hasToken,
+		variables: {
+			token: hasToken,
+		},
 		onCompleted: (result) => {
+			console.log(result)
 			const { me } = result
 			if (me) {
 				setData(me)
